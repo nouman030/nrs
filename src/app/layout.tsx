@@ -1,37 +1,43 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Roboto } from 'next/font/google';
 import "./globals.css";
-import { DM_Sans, Inter } from 'next/font/google'
+// import { DM_Sans, Inter } from 'next/font/google'
 import {dark} from '@clerk/themes'
-import { ClerkProvider, SignIn } from "@clerk/nextjs";
-import { ThemeProvider } from "@/providers/theme-provider";
 
-const inter = Inter({ subsets: ['latin'] })
+import { ThemeProvider } from "@/providers/theme-provider";
+import React from 'react';
+import ModalProvider from "@/providers/modal-provider";
+import { Toaster } from "@/components/ui/toaster";
+
+  const roboto = Roboto({ subsets: ['latin'], weight: '400' });
 
 export const metadata: Metadata = {
   title: 'NRS-Studio',
   description: 'All in one Agency Solution',
 }
 
-export default function RootLayout({
+export default React.memo(function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={roboto.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ClerkProvider appearance={{baseTheme: dark}}>
-            {children}
-          </ClerkProvider>
+         <ModalProvider>  {children}
+          <Toaster />
+        
+         </ModalProvider>
+          
+         
         </ThemeProvider>
       </body>
     </html>
   );
-}
+});

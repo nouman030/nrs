@@ -1,3 +1,22 @@
 npx prisma generate
 npx prisma db push
 npx prisma studio
+
+
+if (typeof window !== 'undefined') {
+    console.error = () => {}; // Suppress console errors
+    console.warn = () => {}; // Suppress console warnings
+}
+
+
+
+Error: Route "/agency" used `searchParams.state`. `searchParams` should be awaited before using its 
+properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at state (src\app\(main)\agency\page.tsx:25:33)
+  23 |         return redirect(`/agency/${agencyId}/billing?plan=${searchParams.plan}`)
+  24 |       }
+> 25 |       const state = searchParams.state
+     |                                 ^
+  26 |       if (state) {
+  27 |         const statePath = state.split('___')[0]
+  28 |         const stateAgencyId = state.split('___')[1]

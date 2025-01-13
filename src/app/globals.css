@@ -119,3 +119,41 @@ B (255 */
     transform: scale(1);
   }
 }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px; /* Add this for horizontal scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #333; /* Darker track for dark mode */
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555; /* Dark thumb color */
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #666; /* Lighter thumb color on hover */
+}
+
+/* Light mode adjustments */
+@media (prefers-color-scheme: light) {
+  ::-webkit-scrollbar-track {
+    background: #e0e0e0; /* Light gray for track in light mode */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #bbb; /* Light thumb color */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #999; /* Slightly darker thumb on hover */
+  }
+}

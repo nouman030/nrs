@@ -16,7 +16,9 @@ const FileUpload = ( {apiEndpoint , onchange , value}: Props) => {
         return <div className=' flex flex-col justify-center items-center'>
             {type !== 'pdf' ? <div className='relative w-40 h-40'>
                 <Image src={value} alt="upload image"
-                className='object-container' />
+                className='object-cover' 
+                width={120} height={120}
+                />
                  </div>:(
                     <div className='relative flex items-center p-2 mt-2 rounded-md
                     bg-background/10'>
