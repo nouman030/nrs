@@ -47,11 +47,11 @@ const InfoBar = ({ notifications, subAccountId, className, role }: Props) => {
     <>
       <div
         className={twMerge(
-          'fixed z-[20] md:left-[300px] left-0 right-0 top-0 p-4 bg-background/80 backdrop-blur-md flex  gap-4 items-center border-b-[1px] ',
+          'fixed z-[20] md:left-[300px] left-0 right-0 top-0 p-3 bg-background/80 backdrop-blur-md flex  gap-4 items-center border-b-[1px] ',
           className
         )}
       >
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex item s-center gap-2 ml-auto">
           <UserButton afterSignOutUrl="/" />
           <Sheet>
             <SheetTrigger>
@@ -59,7 +59,7 @@ const InfoBar = ({ notifications, subAccountId, className, role }: Props) => {
                 <Bell size={17} />
               </div>
             </SheetTrigger>
-            <SheetContent className="mt-4 mr-4 pr-4 overflow-scroll">
+            <SheetContent className="mt-4 mr-4 pr-4 overflow-auto rounded">
               <SheetHeader className="text-left">
                 <SheetTitle>Notifications</SheetTitle>
                 <SheetDescription>

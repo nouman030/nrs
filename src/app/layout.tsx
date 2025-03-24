@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from 'next/font/google';
 import "./globals.css";
+import { Play } from "next/font/google";
 // import { DM_Sans, Inter } from 'next/font/google'
 import {dark} from '@clerk/themes'
 
@@ -9,7 +10,7 @@ import React from 'react';
 import ModalProvider from "@/providers/modal-provider";
 import { Toaster } from "@/components/ui/toaster";
 
-  const roboto = Roboto({ subsets: ['latin'], weight: '400' });
+  const roboto = Play({ subsets: ['latin'], weight: '400' });
 
 export const metadata: Metadata = {
   title: 'NRS-Studio',

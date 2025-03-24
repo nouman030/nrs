@@ -3,20 +3,53 @@ npx prisma db push
 npx prisma studio
 
 
+for reset :
+npx prisma migrate reset 
+npx prisma migrate dev
+
+
+// Initialize Prisma client
+npx prisma init
+
+// Generate Prisma client
+npx prisma generate
+
+// Push schema changes to database
+npx prisma db push
+
+// Open Prisma Studio GUI
+npx prisma studio
+
+// Reset database and run migrations
+npx prisma migrate reset
+
+// Create and apply new migration
+npx prisma migrate dev
+
+// Deploy migrations to production
+npx prisma migrate deploy
+
+// Pull database schema into Prisma schema
+npx prisma db pull
+
+// Format Prisma schema file
+npx prisma format
+
+// Validate Prisma schema
+npx prisma validate
+
+
+
 if (typeof window !== 'undefined') {
     console.error = () => {}; // Suppress console errors
     console.warn = () => {}; // Suppress console warnings
 }
 
 
+  bun --max-old-space-size=2048 next dev
+  bun --max-old-space-size=4096 next dev
 
-Error: Route "/agency" used `searchParams.state`. `searchParams` should be awaited before using its 
-properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at state (src\app\(main)\agency\page.tsx:25:33)
-  23 |         return redirect(`/agency/${agencyId}/billing?plan=${searchParams.plan}`)
-  24 |       }
-> 25 |       const state = searchParams.state
-     |                                 ^
-  26 |       if (state) {
-  27 |         const statePath = state.split('___')[0]
-  28 |         const stateAgencyId = state.split('___')[1]
+
+<div class="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+
+

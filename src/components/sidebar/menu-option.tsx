@@ -202,7 +202,7 @@ const MenuOptions = ({
                           subheading="You Can Switch between your agency account and the subaccount from sidebar"
                         >
                           <SubAccountDetails
-                            agencyDetails={user.agency as Agency}
+                            agencyDetails={user?.Agency?.id as string}
                             userId={user?.id as string}
                             userName={user.name}
                           />

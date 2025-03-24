@@ -1,117 +1,122 @@
+/* Import Tailwind directives with minimal specificity */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base styles with improved performance */
 html,
 body {
   height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Efficient box-sizing reset */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* 
-R (0)
-G (110)
-B (255 */
-
+/* Enhanced color system with optimized HSL values */
 @layer base {
   :root {
-    --background: 216 100% 98.04%;
-    --foreground: 213.6 100% 4.9%;
+    --background: 207 10% 98%;
+    --foreground: 207 60% 3%;
 
-    --primary: 214.12 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 207 85% 30%;
+    --primary-foreground: 207 10% 98%;
 
-    --card: 216 100% 98.04%;
-    --card-foreground: 213.6 100% 4.9%;
+    --card: 207 10% 98%;
+    --card-foreground: 207 60% 3%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 213.6 100% 4.9%;
+    --popover: 207 10% 98%;
+    --popover-foreground: 207 60% 3%;
 
-    --secondary: 214.74 100% 92.55%;
-    --secondary-foreground: 216 100% 0.98%;
+    --secondary: 207 60% 17%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 213.6 100% 95.1%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 207 10% 90%;
+    --muted-foreground: 207 60% 30%;
 
-    --accent: 213.6 100% 95.1%;
-    --accent-foreground: 214.12 100% 50%;
+    --accent: 207 10% 90%;
+    --accent-foreground: 207 85% 30%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 207 10% 98%;
 
-    --border: 0 0% 90.2%;
-    --input: 0 0% 90.2%;
-    --ring: 214.12 100% 50%;
+    --border: 207 10% 90%;
+    --input: 207 60% 17%;
+    --ring: 207 85% 30%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Name: custom color palette
-       Author: Ilias Ism
-       URL: https://gradient.page */
+    --gradient: linear-gradient(135deg, #076585 0%, #fff 100%);
 
-    /* CSS: .bg-gradient { background: var(--gradient) } */
-    --gradient: linear-gradient(to top left, #007adf, #00ecbc);
+    --background: 207 60% 3%;
+    --foreground: 207 10% 98%;
 
-    --background: 220 65% 3.52%;
-    --foreground: 220 10% 97.2%;
+    --muted: 207 60% 17%;
+    --muted-foreground: 207 10% 53%;
 
-    --muted: 220 50% 13.2%;
-    --muted-foreground: 220 10% 54.4%;
+    --popover: 207 85% 6%;
+    --popover-foreground: 207 10% 98%;
 
-    --popover: 220 45% 5.72%;
-    --popover-foreground: 220 10% 97.2%;
+    --card: 207 85% 6%;
+    --card-foreground: 207 10% 98%;
 
-    --card: 220 45% 5.72%;
-    --card-foreground: 220 10% 97.2%;
+    --border: 207 60% 17%;
+    --input: 207 60% 17%;
 
-    --border: 220 50% 13.2%;
-    --input: 220 50% 13.2%;
+    --primary: 207 85% 30%;
+    --primary-foreground: 207 10% 98%;
 
-    --primary: 220 100% 44%;
-    --primary-foreground: 220 10% 97.2%;
+    --secondary: 207 60% 17%;
+    --secondary-foreground: 207 10% 98%;
 
-    --secondary: 220 50% 13.2%;
-    --secondary-foreground: 220 10% 97.2%;
+    --accent: 207 60% 17%;
+    --accent-foreground: 207 10% 98%;
 
-    --accent: 220 50% 13.2%;
-    --accent-foreground: 220 10% 97.2%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 207 10% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 220 10% 97.2%;
-
-    --ring: 220 100% 44%;
+    --ring: 207 85% 30%;
   }
 }
 
+/* Optimized base layer styles */
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "kern";
   }
 }
 
+/* Enhanced visual patterns */
 .dotPattern {
   background-image: radial-gradient(rgb(35, 40, 68) 1px, transparent 1px);
-  background-size: 25px 25px;
+  background-size: 24px 24px;
+  background-position: center;
 }
 
+/* Performance optimized animations */
 .use-automation-zoom-in {
-  animation: automation-zoom-in 0.5s;
+  animation: automation-zoom-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 @keyframes automation-zoom-in {
   0% {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
 
   100% {
@@ -120,40 +125,62 @@ B (255 */
   }
 }
 
-/* Scrollbar */
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Optimized utility animations */
+@layer utilities {
+  .animate-fade-up {
+    animation: fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    will-change: transform, opacity;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    will-change: opacity;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Enhanced scrollbar styling */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px; /* Add this for horizontal scrollbar */
+  width: 6px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-  background: #333; /* Darker track for dark mode */
-  border-radius: 5px;
+  background: hsl(var(--background));
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #555; /* Dark thumb color */
-  border-radius: 5px;
+  background: hsl(var(--primary) / 0.4);
+  border-radius: 3px;
+  transition: background 0.2s ease;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #666; /* Lighter thumb color on hover */
-}
-
-/* Light mode adjustments */
-@media (prefers-color-scheme: light) {
-  ::-webkit-scrollbar-track {
-    background: #e0e0e0; /* Light gray for track in light mode */
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #bbb; /* Light thumb color */
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #999; /* Slightly darker thumb on hover */
-  }
+  background: hsl(var(--primary) / 0.6);
 }

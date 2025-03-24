@@ -1,5 +1,6 @@
 'use client'
 
+import { TicketDetails } from '@/lib/types'
 import { Agency, Contact, Plan, User } from '@prisma/client'
 import { createContext, useContext, useEffect, useState } from 'react'
 
@@ -10,9 +11,10 @@ interface ModalProviderProps {
 export type ModalData = {
   user?: User
   agency?: Agency
-
- 
+  ticket?: TicketDetails[0]
+  contact?: Contact
 }
+
 type ModalContextType = {
   data: ModalData
   isOpen: boolean
@@ -23,7 +25,7 @@ type ModalContextType = {
 export const ModalContext = createContext<ModalContextType>({
   data: {},
   isOpen: false,
-  setOpen: (modal: React.ReactNode, fetchData?: () => Promise<any>) => {},
+  setOpen: () => {},
   setClose: () => {},
 })
 
@@ -37,13 +39,12 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     setIsMounted(true)
   }, [])
 
-  const setOpen = async (
-    modal: React.ReactNode,
-    fetchData?: () => Promise<any>
-  ) => {
+  const setOpen = async (modal: React.ReactNode, fetchData?: () => Promise<any>) => {
     if (modal) {
+      // Fetch data if required
       if (fetchData) {
-        setData({ ...data, ...(await fetchData()) } || {})
+        const fetchedData = await fetchData()
+        setData({ ...data, ...(fetchedData || {}) })
       }
       setShowingModal(modal)
       setIsOpen(true)
@@ -53,14 +54,16 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const setClose = () => {
     setIsOpen(false)
     setData({})
+    setShowingModal(null)
   }
 
+  // If the component is not mounted, return null to prevent rendering
   if (!isMounted) return null
 
   return (
     <ModalContext.Provider value={{ data, setOpen, setClose, isOpen }}>
       {children}
-      {showingModal}
+      {isOpen && showingModal} {/* Ensure modal only renders when open */}
     </ModalContext.Provider>
   )
 }
@@ -68,7 +71,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
 export const useModal = () => {
   const context = useContext(ModalContext)
   if (!context) {
-    throw new Error('useModal must be used within the modal provider')
+    throw new Error('useModal must be used within the ModalProvider')
   }
   return context
 }
