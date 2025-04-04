@@ -353,11 +353,11 @@ export const upsertSubAccount = async (subAccount: any) => {
               icon: "database",
               link: `/subaccount/${subAccount.id}/media`,
             },
-            {
-              name: "Automations",
-              icon: "chip",
-              link: `/subaccount/${subAccount.id}/automations`,
-            },
+            // {
+            //   name: "Automations",
+            //   icon: "chip",
+            //   link: `/subaccount/${subAccount.id}/automations`,
+            // },
             {
               name: "Pipelines",
               icon: "flag",
@@ -972,50 +972,7 @@ export const getDomainContent = async (subDomainName: string) => {
   })
   return response
 }
-export const TotalLength = async () => {
-  const [
-    funnels,
-    subAccounts,
-    users,
-    funnelPages,
-    lanes,
-    tickets,
-    tags,
-    contacts,
-    pipelines,
-    media,
-    automations,
-    agencies
-  ] = await db.$transaction([
-    db.funnel.count(),
-    db.subAccount.count(),
-    db.user.count(),
-    db.funnelPage.count(),
-    db.lane.count(),
-    db.ticket.count(),
-    db.tag.count(),
-    db.contact.count(),
-    db.pipeline.count(),
-    db.media.count(),
-    db.automation.count(),
-    db.agency.count(),
-  ])
 
-  return {
-    funnels,
-    subAccounts,
-    users,
-    funnelPages,
-    lanes,
-    tickets,
-    tags,
-    contacts,
-    pipelines,
-    media,
-    automations,
-    agencies
-  }
-}
 
 export const createSubscription = async (subscription: {
   planId: string

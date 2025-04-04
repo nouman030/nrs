@@ -52,9 +52,9 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        'use-automation-zoom-in h-full overflow-hidden mr-[385px] bg-background transition-all rounded-md',
+        'use-automation-zoom-in h-full overflow-y-auto overflow-x-hidden mr-[385px] bg-background transition-all rounded-lg shadow-sm border border-border/50',
         {
-          '!p-0 !mr-0':
+          '!p-0 !mr-0 !border-0 !shadow-none':
             state.editor.previewMode === true || state.editor.liveMode === true,
           '!w-[850px]': state.editor.device === 'Tablet',
           '!w-[420px]': state.editor.device === 'Mobile',
@@ -67,10 +67,10 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
         <Button
           variant={'ghost'}
           size={'icon'}
-          className="w-6 h-6 bg-slate-600 p-[2px] fixed top-0 left-0 z-[100]"
+          className="w-8 h-8 bg-slate-600/90 hover:bg-slate-600 p-[2px] fixed top-4 left-4 z-[100] rounded-full shadow-md transition-all"
           onClick={handleUnpreview}
         >
-          <EyeOff />
+          <EyeOff className="w-4 h-4 text-white" />
         </Button>
       )}
       {Array.isArray(state.editor.elements) &&

@@ -10,12 +10,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { useForm } from 'react-hook-form'
-import { Funnel } from '@prisma/client'
+import { Funnel, Subscription } from '@prisma/client'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
-
 import { Button } from '../ui/button'
 import Loading from '../global/loading'
 import { CreateFunnelFormSchema } from '@/lib/types'
@@ -26,10 +25,15 @@ import { useModal } from '@/providers/modal-provider'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FileUpload from '../global/file-upload'
+import { Lock } from 'lucide-react'
+import Link from 'next/link'
 
 interface CreateFunnelProps {
   defaultData?: Funnel
   subAccountId: string
+  subscriptionPrice: number
+  currentFunnelsCount: number
+  agencyId: string
 }
 
 //CHALLENGE: Use favicons
@@ -37,6 +41,9 @@ interface CreateFunnelProps {
 const FunnelForm: React.FC<CreateFunnelProps> = ({
   defaultData,
   subAccountId,
+  subscriptionPrice,
+  currentFunnelsCount,
+  agencyId
 }) => {
   const { setClose } = useModal()
   const router = useRouter()
@@ -64,6 +71,51 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
 
   const isLoading = form.formState.isLoading
 
+  // Determine limits based on subscription price
+  const getFunnelLimit = () => {
+    if (subscriptionPrice >= 50) return Infinity
+    if (subscriptionPrice > 0 && subscriptionPrice < 50) return 5
+    return 1 // No subscription
+  }
+
+  const funnelLimit = getFunnelLimit()
+  const isUpgradeRequired = currentFunnelsCount >= funnelLimit
+
+  if (isUpgradeRequired) {
+    return (
+      <Card className="w-full border-2 border-destructive/20">
+        <CardHeader>
+          <div className="flex items-center gap-2 text-destructive">
+            <Lock className="h-5 w-5" />
+            <CardTitle>Funnel Limit Reached</CardTitle>
+          </div>
+          <CardDescription className="text-destructive/80">
+            {subscriptionPrice >= 50 
+              ? "You've reached the maximum number of funnels allowed."
+              : subscriptionPrice > 0 && subscriptionPrice < 50
+              ? "Your current plan allows up to 5 funnels. To add more, please upgrade your agency plan."
+              : "Your free plan allows up to 1 funnel. To add more, please upgrade your agency plan."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg bg-destructive/10 p-4">
+            <p className="text-sm text-destructive">
+              Current funnels: {currentFunnelsCount}/{funnelLimit === Infinity ? '∞' : funnelLimit}
+            </p>
+            <p className="text-sm text-destructive mt-1">
+              Current plan: {subscriptionPrice === 0 ? 'Free' : `₹${subscriptionPrice}/month`}
+            </p>
+          </div>
+          <Button asChild className="w-full bg-destructive hover:bg-destructive/90">
+            <Link href={`/agency/${agencyId}/billing`}>
+              Upgrade Now
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
+
   const onSubmit = async (values: z.infer<typeof CreateFunnelFormSchema>) => {
     if (!subAccountId) return
     const response = await upsertFunnel(
@@ -90,6 +142,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
     setClose()
     router.refresh()
   }
+
   return (
     <Card className="flex-1">
       <CardHeader>

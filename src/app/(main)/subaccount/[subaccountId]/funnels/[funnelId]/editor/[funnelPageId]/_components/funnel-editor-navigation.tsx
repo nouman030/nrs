@@ -141,17 +141,17 @@ const FunnelEditorNavigation = memo(({ funnelId, funnelPageDetails, subaccountId
     return (
         <TooltipProvider>
             <nav className={clsx(
-                'border-b-[1px] flex items-center justify-between p-6 gap-2 transition-all',
+                'border-b border-border/50 flex items-center justify-between p-6 gap-2 transition-all bg-background/95 backdrop-blur-sm shadow-sm',
                 { '!h-0 !p-0 !overflow-hidden': state.editor.previewMode }
             )}>
                 <aside className="flex items-center gap-4 max-w-[260px] w-[300px]">
-                    <Link href={`/subaccount/${subaccountId}/funnels/${funnelId}`}>
-                        <ArrowLeftCircle />
+                    <Link href={`/subaccount/${subaccountId}/funnels/${funnelId}`} className="hover:opacity-80 transition-opacity">
+                        <ArrowLeftCircle className="w-6 h-6 text-muted-foreground" />
                     </Link>
                     <div className="flex flex-col w-full">
                         <Input
                             defaultValue={funnelPageDetails.name}
-                            className="border-none h-5 m-0 p-0 text-lg"
+                            className="border-none h-6 m-0 p-0 text-lg font-medium focus-visible:ring-0 focus-visible:ring-offset-0"
                             onBlur={handleOnBlurTitleChange}
                         />
                         <span className="text-sm text-muted-foreground">
@@ -167,7 +167,7 @@ const FunnelEditorNavigation = memo(({ funnelId, funnelPageDetails, subaccountId
                         value={state.editor.device}
                         onValueChange={handleDeviceChange}
                     >
-                        <TabsList className="grid w-full grid-cols-3 bg-transparent h-fit">
+                        <TabsList className="grid w-full grid-cols-3 bg-background/95 backdrop-blur-sm border border-border/50 h-fit rounded-lg p-1">
                             <DeviceButton value="Desktop" icon={Laptop} />
                             <DeviceButton value="Tablet" icon={Tablet} />
                             <DeviceButton value="Mobile" icon={Smartphone} />

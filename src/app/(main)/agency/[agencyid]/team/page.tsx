@@ -11,8 +11,6 @@ type Props = {
 }
 
 const TeamPage = async ({ params }: Props) => {
-
-    
     const authUser = await currentUser()
     if (!authUser) return null
 
@@ -24,6 +22,7 @@ const TeamPage = async ({ params }: Props) => {
         },
         include: {
             SubAccount: true,
+            Subscription: true,
         },
     })
 
@@ -52,14 +51,19 @@ const TeamPage = async ({ params }: Props) => {
     })
 
     return (
-        <DataTable actionButtonText={<><Plus size={15}/></>}
-        modalChildren={
-            <SendInvitation agencyId={agencyDetails.id}/>
-        }
-        filterValue='name'
-        columns={columns}
-        data={teamMembers}
-        ></DataTable>
+        <DataTable 
+            actionButtonText={<><Plus size={15}/></>}
+            modalChildren={
+                <SendInvitation 
+                    agencyId={agencyDetails.id}
+                    teamMembersCount={teamMembers.length}
+                    subscriptionPrice={Number(agencyDetails.Subscription?.price || 0)}
+                />
+            }
+            filterValue='name'
+            columns={columns}
+            data={teamMembers}
+        />
     )
 }
 

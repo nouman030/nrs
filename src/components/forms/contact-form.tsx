@@ -37,9 +37,8 @@ const ContactForm = ({ apiCall, subTitle, title }: Props) => {
       email: '',
     },
   })
-  const isLoading = form.formState.isLoading
 
-  //CHALLENGE: We want to create tags for each leads that comes from the form
+  const isSubmitting = form.formState.isSubmitting
   
   return (
     <Card className="max-w-[500px] w-[500px]">
@@ -54,7 +53,6 @@ const ContactForm = ({ apiCall, subTitle, title }: Props) => {
             className="flex flex-col gap-4"
           >
             <FormField
-              disabled={isLoading}
               control={form.control}
               name="name"
               render={({ field }) => (
@@ -71,7 +69,6 @@ const ContactForm = ({ apiCall, subTitle, title }: Props) => {
               )}
             />
             <FormField
-              disabled={isLoading}
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -90,10 +87,10 @@ const ContactForm = ({ apiCall, subTitle, title }: Props) => {
             />
             <Button
               className="mt-4"
-              disabled={isLoading}
+              disabled={isSubmitting}
               type="submit"
             >
-              {form.formState.isSubmitting ? <Loading /> : 'Get a free quote!'}
+              {isSubmitting ? <Loading /> : 'Get a free quote!'}
             </Button>
           </form>
         </Form>

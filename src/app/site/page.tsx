@@ -9,11 +9,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CountUp from '@/components/num';
-import GradientText from '@/components/GradientText';
-import RotatingText from '@/components/RotatingText/RotatingText';
 import { useTheme } from 'next-themes';
-import ParticlesBackground from '@/components/ParticlesBackground';
-import RazorpaySubscription from '@/components/Payments/plans-info';
+
 
 
 export default function Home() {

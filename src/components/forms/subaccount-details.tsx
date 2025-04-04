@@ -20,6 +20,8 @@ import Loading from "../global/loading"
 import { useModal } from "@/providers/modal-provider"
 import type { SubAccount } from "@prisma/client"
 import { useEffect } from "react"
+import { Lock } from "lucide-react"
+import Link from "next/link"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -38,15 +40,23 @@ interface SubAccountDetailsProps {
   details?: Partial<SubAccount>
   userId: string
   userName: string
+  subscriptionPrice: number
+  currentSubAccountsCount: number
 }
-
 
 if (typeof window !== 'undefined') {
   console.error = () => {}; // Suppress console errors
   console.warn = () => {}; // Suppress console warnings
 }
 
-function SubAccountDetails({ details = {}, agencyDetails, userId, userName }: SubAccountDetailsProps) {
+function SubAccountDetails({ 
+  details = {}, 
+  agencyDetails, 
+  userId, 
+  userName,
+  subscriptionPrice,
+  currentSubAccountsCount
+}: SubAccountDetailsProps) {
   const { toast } = useToast()
   const { setClose } = useModal()
   const router = useRouter()
@@ -124,6 +134,50 @@ function SubAccountDetails({ details = {}, agencyDetails, userId, userName }: Su
 
   const isLoading = form.formState.isSubmitting
 
+  // Determine limits based on subscription price
+  const getSubAccountLimit = () => {
+    if (subscriptionPrice >= 50) return Infinity
+    if (subscriptionPrice > 0 && subscriptionPrice < 50) return 10
+    return 3 // No subscription
+  }
+
+  const subAccountLimit = getSubAccountLimit()
+  const isUpgradeRequired = currentSubAccountsCount >= subAccountLimit
+
+  if (isUpgradeRequired) {
+    return (
+      <Card className="w-full border-2 border-destructive/20">
+        <CardHeader>
+          <div className="flex items-center gap-2 text-destructive">
+            <Lock className="h-5 w-5" />
+            <CardTitle>Sub Account Limit Reached</CardTitle>
+          </div>
+          <CardDescription className="text-destructive/80">
+            {subscriptionPrice >= 50 
+              ? "You've reached the maximum number of sub accounts allowed."
+              : subscriptionPrice > 0 && subscriptionPrice < 50
+              ? "Your current plan allows up to 10 sub accounts. To add more, please upgrade your agency plan."
+              : "Your free plan allows up to 3 sub accounts. To add more, please upgrade your agency plan."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg bg-destructive/10 p-4">
+            <p className="text-sm text-destructive">
+              Current sub accounts: {currentSubAccountsCount}/{subAccountLimit === Infinity ? '∞' : subAccountLimit}
+            </p>
+            <p className="text-sm text-destructive mt-1">
+              Current plan: {subscriptionPrice === 0 ? 'Free' : `₹${subscriptionPrice}/month`}
+            </p>
+          </div>
+          <Button asChild className="w-full bg-destructive hover:bg-destructive/90">
+            <Link href={`/agency/${agencyDetails}/billing`}>
+              Upgrade Now
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
 
   if (typeof window !== 'undefined') {
     console.error = () => {}; // Suppress console errors

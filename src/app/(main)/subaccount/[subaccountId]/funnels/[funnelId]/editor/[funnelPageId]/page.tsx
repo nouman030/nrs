@@ -32,7 +32,7 @@ const page = async ({ params }: Props) => {
 
 
     return (
-        <div className="fixed top-0 bottom-0 left-0 right-0 z-[20] bg-background overflow-hidden">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-[20] bg-background/95 backdrop-blur-sm overflow-hidden">
             <EditorProvider
                 subaccountId={pr.subaccountId}
                 funnelId={pr.funnelId}
@@ -43,7 +43,7 @@ const page = async ({ params }: Props) => {
                     funnelPageDetails={funnelPageDetails}
                     subaccountId={pr.subaccountId}
                 />
-                <div className="h-full flex justify-center">
+                <div className="h-[calc(100vh-97px)] flex justify-center items-start pt-6 overflow-x-hidden">
                     <FunnelEditor funnelPageId={pr.funnelPageId} />
                 </div>
 

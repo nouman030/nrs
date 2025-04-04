@@ -205,6 +205,8 @@ const MenuOptions = ({
                             agencyDetails={user?.Agency?.id as string}
                             userId={user?.id as string}
                             userName={user.name}
+                            subscriptionPrice={Number(user?.Agency?.Subscription?.price || 0)}
+                            currentSubAccountsCount={user?.Agency?.SubAccount.length || 0}
                           />
                         </CustomModal>
                       )

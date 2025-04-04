@@ -80,6 +80,7 @@ const LinkComponent = (props: Props) => {
                 elementDetails: {
                   ...props.element,
                   content: {
+                    ...props.element.content,
                     innerText: spanElement.innerText,
                   },
                 },

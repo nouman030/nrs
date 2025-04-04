@@ -7,7 +7,7 @@ import { PlusCircleIcon } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import CustomModal from '@/components/global/custom-modal';
 import SubAccountDetails from '@/components/forms/subaccount-details';
-import { Agency, SubAccount, AgencySidebarOption, User } from '@prisma/client';
+import { Agency, SubAccount, AgencySidebarOption, User, Subscription } from '@prisma/client';
 
 type Props = {
   user: User & {
@@ -15,6 +15,7 @@ type Props = {
       | (Agency & {
           SubAccount: SubAccount[];
           SideBarOption?: AgencySidebarOption[];
+          Subscription?: Subscription | null;
         })
       | null;
   };
@@ -26,7 +27,10 @@ const CreateSubaccountButton = ({ className, id, user }: Props) => {
   const { setOpen } = useModal();
   const agencyDetails = user?.Agency;
 
-  if (!agencyDetails) return null; // Ensure we don't render if agencyDetails is null.
+  if (!agencyDetails) return null;
+
+  const subscriptionPrice = Number(agencyDetails.Subscription?.price || 0);
+  const currentSubAccountsCount = agencyDetails.SubAccount.length;
 
   return (
     <Button
@@ -41,6 +45,8 @@ const CreateSubaccountButton = ({ className, id, user }: Props) => {
               agencyDetails={agencyDetails?.id}
               userId={user?.id}
               userName={user?.name}
+              subscriptionPrice={subscriptionPrice}
+              currentSubAccountsCount={currentSubAccountsCount}
             />
           </CustomModal>
         );

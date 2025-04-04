@@ -6,6 +6,8 @@ import { redirect } from "next/navigation"
 import LoadingPage from "@/components/global/loading-page"
 import { Suspense } from "react"
 import RemoveSubscription from "./_commponts/remove-subscription"
+import { useTheme } from "next-themes"
+
 type Props = {
     params: {
         agencyid: string
@@ -18,60 +20,60 @@ type Props = {
 const BillingContent = async ({ agencyid, customerId, hasActiveSubscription, agencyDetails }: any) => {
     const subscriptionId = await agencyDetails.Subscription?.id
     return (
-        <div className="flex flex-col justify-center items-center py-10 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen">
+        <div className="flex flex-col justify-center items-center py-10 min-h-screen ">
             {hasActiveSubscription ? (
-                <div className="w-full max-w-4xl mb-8 p-6 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-400/30 rounded-xl text-center backdrop-blur-sm shadow-xl transition-all hover:shadow-emerald-500/10">
-                    <h2 className="text-2xl font-bold text-emerald-400 mb-3">Active Subscription</h2>
-                    <p className="text-slate-200 text-lg">
-                        Your subscription is active until <span className="text-emerald-400 font-semibold">{agencyDetails.Subscription?.currentPeriodEndDate.toLocaleDateString()}</span>
+                <div className="w-full max-w-4xl mb-8 p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-xl text-center shadow-lg transition-all hover:shadow-primary/10">
+                    <h2 className="text-2xl font-bold text-primary mb-3">Active Subscription</h2>
+                    <p className="text-foreground text-lg">
+                        Your subscription is active until <span className="text-primary font-semibold">{agencyDetails.Subscription?.currentPeriodEndDate.toLocaleDateString()}</span>
                         <br />
-                        <span className="text-sm text-slate-400">Auto-renews monthly for up to 12 months</span>
+                        <span className="text-sm text-muted-foreground">Auto-renews monthly for up to 12 months</span>
                     </p>
                 </div>
             ) : (
-                <div className="w-full max-w-4xl p-6  rounded-xl backdrop-blur-sm">
+                <div className="w-full  mx-auto p-4 sm:p-6 rounded-xl bg-card shadow-lg border border-border">
                     <RazorpaySubscription agencyId={agencyid} customerId={customerId} />
                 </div>
             )}
 
             {hasActiveSubscription && (
                 <div className="w-full max-w-4xl mt-8 px-4 sm:px-6">
-                    <div className="bg-slate-800/50 p-6 rounded-xl shadow-lg backdrop-blur-sm border border-slate-700">
-                        <h3 className="text-2xl font-bold text-slate-100 mb-6 text-center">
+                    <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
+                        <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
                             Subscription Details
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors">
-                                <p className="text-sm text-slate-400">Plan Id</p>
-                                <p className="font-semibold text-slate-200 truncate">
+                            <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                <p className="text-sm text-muted-foreground">Plan Id</p>
+                                <p className="font-semibold text-foreground truncate">
                                     {agencyDetails.Subscription?.planId || 'Standard'}
                                 </p>
                             </div>
-                            <div className="p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors">
-                                <p className="text-sm text-slate-400">Status</p>
-                                <p className="font-semibold text-emerald-400">Active</p>
+                            <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                <p className="text-sm text-muted-foreground">Status</p>
+                                <p className="font-semibold text-primary">Active</p>
                             </div>
-                            <div className="p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors">
-                                <p className="text-sm text-slate-400">Start Date</p>
-                                <p className="font-semibold text-slate-200">
+                            <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                <p className="text-sm text-muted-foreground">Start Date</p>
+                                <p className="font-semibold text-foreground">
                                     {agencyDetails.Subscription?.createdAt?.toLocaleDateString()}
                                 </p>
                             </div>
-                            <div className="p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors">
-                                <p className="text-sm text-slate-400">Next Billing Date</p>
-                                <p className="font-semibold text-slate-200">
+                            <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                <p className="text-sm text-muted-foreground">Next Billing Date</p>
+                                <p className="font-semibold text-foreground">
                                     {agencyDetails.Subscription?.currentPeriodEndDate?.toLocaleDateString()}
                                 </p>
                             </div>
-                            <div className="p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors">
-                                <p className="text-sm text-slate-400">Amount</p>
-                                <p className="font-semibold text-emerald-400">
+                            <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                <p className="text-sm text-muted-foreground">Amount</p>
+                                <p className="font-semibold text-primary">
                                     ₹{agencyDetails.Subscription?.price || 0}/month
                                 </p>
                             </div>
-                            <div className="p-4 bg-slate-700/50 rounded-lg hover:bg-slate-700/70 transition-colors">
-                                <p className="text-sm text-slate-400">Customer ID</p>
-                                <p className="font-semibold text-slate-200 text-wrap truncate">
+                            <div className="p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                <p className="text-sm text-muted-foreground">Customer ID</p>
+                                <p className="font-semibold text-foreground text-wrap truncate">
                                     {customerId}
                                 </p>
                             </div>

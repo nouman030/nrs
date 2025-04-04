@@ -5,6 +5,26 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 import FunnelEditorNavigation from '../(main)/subaccount/[subaccountId]/funnels/[funnelId]/editor/[funnelPageId]/_components/funnel-editor-navigation'
 import FunnelEditor from '../(main)/subaccount/[subaccountId]/funnels/[funnelId]/editor/[funnelPageId]/_components/funnel-editor'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: { domain: string } }): Promise<Metadata> {
+  const domainData = await getDomainContent(params.domain.slice(0, -1))
+  
+  if (!domainData) {
+    return {
+      title: 'Not Found',
+    }
+  }
+
+  return {
+    title: domainData.name,
+    icons: {
+      icon: [
+        { url: domainData.favicon || '/favicon.ico', type: domainData.favicon?.endsWith('.ico') ? 'image/x-icon' : 'image/png' }
+      ],
+    },
+  }
+}
 
 const Page = async ({ params }: { params: { domain: string } }) => {
 
