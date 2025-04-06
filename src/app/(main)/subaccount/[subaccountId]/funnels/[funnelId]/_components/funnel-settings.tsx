@@ -3,7 +3,8 @@ import React from 'react'
 import { Funnel, SubAccount } from '@prisma/client'
 import { db } from '@/lib/db'
 import FunnelForm from '@/components/forms/funnel-form'
-import FunnelDelete from '@/app/(main)/subaccount/[subaccountId]funnels/[funnelId]/_components/funnel-delete'
+import FunnelDelete from './funnel-delete'
+
 
 interface FunnelSettingsProps {
   subaccountId: string
