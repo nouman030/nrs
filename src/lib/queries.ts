@@ -1034,4 +1034,11 @@ export const getPipelines = async (subaccountId: string) => {
   return response
 }
 
+export const deleteFunnel = async (funnelId: string) => {
+  const response = await db.funnel.delete({
+    where: { id: funnelId },
+  })
+  return response
+}
+
 

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { z } from 'zod'
 import {
   Form,
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/form'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { useForm } from 'react-hook-form'
-import { Funnel, Subscription } from '@prisma/client'
+import { Funnel } from '@prisma/client'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { Button } from '../ui/button'
@@ -34,19 +34,21 @@ interface CreateFunnelProps {
   subscriptionPrice: number
   currentFunnelsCount: number
   agencyId: string
+  mode?: 'create' | 'update'
 }
-
-//CHALLENGE: Use favicons
 
 const FunnelForm: React.FC<CreateFunnelProps> = ({
   defaultData,
   subAccountId,
   subscriptionPrice,
   currentFunnelsCount,
-  agencyId
+  agencyId,
+  mode = 'create'
 }) => {
   const { setClose } = useModal()
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  
   const form = useForm<z.infer<typeof CreateFunnelFormSchema>>({
     mode: 'onChange',
     resolver: zodResolver(CreateFunnelFormSchema),
@@ -71,17 +73,16 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
 
   const isLoading = form.formState.isLoading
 
-  // Determine limits based on subscription price
   const getFunnelLimit = () => {
     if (subscriptionPrice >= 50) return Infinity
     if (subscriptionPrice > 0 && subscriptionPrice < 50) return 5
-    return 1 // No subscription
+    return 1
   }
 
   const funnelLimit = getFunnelLimit()
   const isUpgradeRequired = currentFunnelsCount >= funnelLimit
 
-  if (isUpgradeRequired) {
+  if (isUpgradeRequired && mode === 'create') {
     return (
       <Card className="w-full border-2 border-destructive/20">
         <CardHeader>
@@ -117,36 +118,50 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
   }
 
   const onSubmit = async (values: z.infer<typeof CreateFunnelFormSchema>) => {
-    if (!subAccountId) return
-    const response = await upsertFunnel(
-      subAccountId,
-      { ...values, liveProducts: defaultData?.liveProducts || '[]' },
-      defaultData?.id || v4()
-    )
-    await seveActivityLogsNotification({
-      agencyId: undefined,
-      description: `Update funnel | ${response.name}`,
-      subaccountId: subAccountId,
-    })
-    if (response)
+    try {
+      setError(null)
+      if (!subAccountId) {
+        setError('Subaccount ID is required')
+        return
+      }
+
+      const response = await upsertFunnel(
+        subAccountId,
+        { ...values, liveProducts: defaultData?.liveProducts || '[]' },
+        defaultData?.id || v4()
+      )
+
+      if (!response) {
+        throw new Error('Failed to save funnel')
+      }
+
+      await seveActivityLogsNotification({
+        agencyId: undefined,
+        description: `${mode === 'create' ? 'Created' : 'Updated'} funnel | ${response.name}`,
+        subaccountId: subAccountId,
+      })
+
       toast({
         title: 'Success',
-        description: 'Saved funnel details',
+        description: `${mode === 'create' ? 'Created' : 'Updated'} funnel details`,
       })
-    else
+
+      setClose()
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
       toast({
         variant: 'destructive',
-        title: 'Oppse!',
-        description: 'Could not save funnel details',
+        title: 'Error',
+        description: err instanceof Error ? err.message : 'Failed to save funnel details',
       })
-    setClose()
-    router.refresh()
+    }
   }
 
   return (
     <Card className="flex-1">
       <CardHeader>
-        <CardTitle>Funnel Details</CardTitle>
+        <CardTitle>{mode === 'create' ? 'Create' : 'Update'} Funnel Details</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -154,6 +169,11 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
+            {error && (
+              <div className="text-destructive text-sm mb-4">
+                {error}
+              </div>
+            )}
             <FormField
               disabled={isLoading}
               control={form.control}
@@ -167,6 +187,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -183,6 +204,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -199,6 +221,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -225,7 +248,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
               disabled={isLoading}
               type="submit"
             >
-              {form.formState.isSubmitting ? <Loading /> : 'Save'}
+              {form.formState.isSubmitting ? <Loading /> : mode === 'create' ? 'Create' : 'Update'}
             </Button>
           </form>
         </Form>

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import FunnelSteps from './_components/funnel-steps'
+import FunnelSettings from './_components/funnel-settings'
 
 type Props = {
   params: { funnelId: string; subaccountId: string }
@@ -42,10 +43,10 @@ const FunnelPage = async ({ params }: Props) => {
           />
         </TabsContent>
         <TabsContent value="settings">
-          {/* <FunnelSettings
+          <FunnelSettings
             subaccountId={params.subaccountId}
             defaultData={funnelPages}
-          /> */}
+          />
         </TabsContent>
       </Tabs>
     </BlurPage>
