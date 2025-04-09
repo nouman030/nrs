@@ -11,7 +11,7 @@ interface PageProps {
     params: {
         agencyid: string
     }
-    searchParams: {
+    searchParams?: {
         code?: string
     }
 }
@@ -113,7 +113,7 @@ const BillingContent = async ({
     )
 }
 
-const BillingPage = async ({ params }: PageProps) => {
+const BillingPage = async ({ params, searchParams }: PageProps) => {
     const { agencyid } = params
     const user = await currentUser()
 
