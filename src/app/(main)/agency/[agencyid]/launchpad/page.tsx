@@ -4,28 +4,31 @@ import { db } from '@/lib/db'
 import { CheckCircleIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import { Metadata } from 'next'
 
-type Props = {
+export const metadata: Metadata = {
+    title: 'Agency Launchpad',
+    description: 'Setup your agency account',
+}
+
+interface PageProps {
     params: {
         agencyid: string
     }
     searchParams: {
-        code: string
+        code?: string
     }
 }
 
-const LaunchpadPage = async ({params, searchParams}: Props) => {
-    const { agencyid } = await params
+export default async function Page({ params, searchParams }: PageProps) {
     const agencyDetails = await db.agency.findUnique({
-        where:{
-            id: agencyid
+        where: {
+            id: params.agencyid
         }
     })
     if(!agencyDetails) return 
 
     const allDetailsExist =
-    agencyDetails.address &&
     agencyDetails.address &&
     agencyDetails.agencyLogo &&
     agencyDetails.city &&
@@ -91,5 +94,3 @@ const LaunchpadPage = async ({params, searchParams}: Props) => {
         </div>
   )
 }
-
-export default LaunchpadPage
