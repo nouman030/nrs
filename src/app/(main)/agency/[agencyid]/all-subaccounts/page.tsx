@@ -22,17 +22,17 @@ import { getAuthUserDetails } from '@/lib/queries'
 import { SubAccount } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
-
 import React from 'react'
 import DeleteButton from './_components/delete-button'
 import CreateSubaccountButton from './_components/create-subaccount-btn'
 
-type Props = {
-  params: { agencyid: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-const AllSubaccountsPage = async ({ params }: Props) => {
+export default async function AllSubaccountsPage({ 
+  params,
+  searchParams 
+}: {
+  params: { agencyid: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const user = await getAuthUserDetails()
   if (!user) return
   const agencyId = params.agencyid
@@ -118,5 +118,3 @@ const AllSubaccountsPage = async ({ params }: Props) => {
     </AlertDialog>
   )
 }
-
-export default AllSubaccountsPage
