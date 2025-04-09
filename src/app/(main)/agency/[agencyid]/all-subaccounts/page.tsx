@@ -27,8 +27,8 @@ import DeleteButton from './_components/delete-button'
 import CreateSubaccountButton from './_components/create-subaccount-btn'
 
 interface Props {
-  params: { agencyid: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ agencyid: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function AllSubaccountsPage({ 
@@ -42,7 +42,7 @@ export default async function AllSubaccountsPage({
       return notFound()
     }
 
-    const agencyId = params.agencyid
+    const agencyId = (await params).agencyid
 
     return (
       <AlertDialog>
