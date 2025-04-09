@@ -81,6 +81,12 @@ const AgencyDetails = ({ data }: Props) => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (form) {
+      // Your effect code here
+    }
+  }, [form])
+
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
       let custId
