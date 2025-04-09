@@ -22,68 +22,59 @@ import { getAuthUserDetails } from '@/lib/queries'
 import { SubAccount } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+
+import React from 'react'
 import DeleteButton from './_components/delete-button'
 import CreateSubaccountButton from './_components/create-subaccount-btn'
 
-interface Props {
-  params: Promise<{ agencyid: string }>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+type Props = {
+  params: { agencyId: string }
 }
 
-export default async function AllSubaccountsPage({ 
-  params,
-  searchParams 
-}: Props) {
-  try {
-    const user = await getAuthUserDetails()
-    
-    if (!user) {
-      return notFound()
-    }
+const AllSubaccountsPage = async ({ params }: Props) => {
+  const user = await getAuthUserDetails()
+  if (!user) return
 
-    const agencyId = (await params).agencyid
-
-    return (
-      <AlertDialog>
-        <div className="flex flex-col">
-          <CreateSubaccountButton
-            user={user}
-            id={agencyId}
-            className="w-[200px] self-end m-6"
-          />
-          <Command className="rounded-lg bg-transparent">
-            <CommandInput placeholder="Search Account..." />
-            <CommandList>
-              <CommandEmpty>No Results Found.</CommandEmpty>
-              <CommandGroup heading="Sub Accounts">
-                {user.Agency?.SubAccount.length ? (
-                  user.Agency.SubAccount.map((subaccount: SubAccount) => (
-                    <CommandItem
-                      key={subaccount.id}
-                      className="h-32 !bg-background my-2 text-primary border-[1px] border-border p-4 rounded-lg hover:!bg-background cursor-pointer transition-all"
+  return (
+    <div className="flex flex-col ">
+        <CreateSubaccountButton
+          user={user}
+          id={params.agencyId}
+          className="w-[200px] self-end m-6"
+        />
+        <Command className="rounded-lg bg-transparent">
+          <CommandInput placeholder="Search Account..." />
+          <CommandList>
+            <CommandEmpty>No Results Found.</CommandEmpty>
+            <CommandGroup heading="Sub Accounts">
+              {!!user.Agency?.SubAccount.length ? (
+                user.Agency.SubAccount.map((subaccount: SubAccount) => (
+                  <CommandItem
+                    key={subaccount.id}
+                    className="h-32 !bg-background my-2 text-primary/100 border-[1px] border-border p-4 rounded-lg hover:!bg-background cursor-pointer transition-all"
+                  >
+                    <Link
+                      href={`/subaccount/${subaccount.id}`}
+                      className="flex gap-4 w-full h-full"
                     >
-                      <Link
-                        href={`/subaccount/${subaccount.id}`}
-                        className="flex gap-4 w-full h-full"
-                      >
-                        <div className="relative w-32">
-                          <Image
-                            src={subaccount.subAccountLogo}
-                            alt="subaccount logo"
-                            fill
-                            className="rounded-md object-contain bg-muted/50 p-4"
-                          />
+                      <div className="relative w-32">
+                        <Image
+                          src={subaccount.subAccountLogo}
+                          alt="subaccount logo"
+                          fill
+                          className="rounded-md object-contain bg-muted/50 p-4"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-between">
+                        <div className="flex flex-col">
+                          {subaccount.name}
+                          <span className="text-muted-foreground text-xs">
+                            {subaccount.address}
+                          </span>
                         </div>
-                        <div className="flex flex-col justify-between">
-                          <div className="flex flex-col">
-                            {subaccount.name}
-                            <span className="text-muted-foreground text-xs">
-                              {subaccount.address}
-                            </span>
-                          </div>
-                        </div>
-                      </Link>
+                      </div>
+                    </Link>
+                    <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
                           size={'sm'}
@@ -112,21 +103,20 @@ export default async function AllSubaccountsPage({
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
-                    </CommandItem>
-                  ))
-                ) : (
-                  <div className="text-muted-foreground text-center p-4">
-                    No Sub accounts
-                  </div>
-                )}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </div>
-      </AlertDialog>
-    )
-  } catch (error) {
-    console.error('Error in AllSubaccountsPage:', error)
-    return notFound()
-  }
+                    </AlertDialog>
+                  </CommandItem>
+                ))
+              ) : (
+                <div className="text-muted-foreground text-center p-4">
+                  No Sub accounts
+                </div>
+              )}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </div>
+  )
 }
+
+export default AllSubaccountsPage
+

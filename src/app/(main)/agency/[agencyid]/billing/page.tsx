@@ -6,44 +6,19 @@ import { redirect } from "next/navigation"
 import LoadingPage from "@/components/global/loading-page"
 import { Suspense } from "react"
 import RemoveSubscription from "./_commponts/remove-subscription"
+import { useTheme } from "next-themes"
 
-type PageProps = {
-    params: Promise<{
+type Props = {
+    params: {
         agencyid: string
-    }>
-    searchParams: Promise<{
-        code?: string
-    }>
-}
-
-type BillingContentProps = {
-    agencyid: string
-    customerId: string
-    hasActiveSubscription: boolean
-    agencyDetails: {
-        Subscription: {
-            id: string
-            status: string
-            currentPeriodEndDate: Date
-            createdAt: Date
-            planId: string
-            price: string | null
-            active: boolean
-            subscritiptionId: string
-            updatedAt: Date
-            agencyId: string | null
-        } | null
-        customerId: string
+    }
+    searchParams: {
+        code: string
     }
 }
 
-const BillingContent = async ({ 
-    agencyid, 
-    customerId, 
-    hasActiveSubscription, 
-    agencyDetails 
-}: BillingContentProps) => {
-    const subscriptionId = agencyDetails.Subscription?.id
+const BillingContent = async ({ agencyid, customerId, hasActiveSubscription, agencyDetails }: any) => {
+    const subscriptionId = await agencyDetails.Subscription?.id
     return (
         <div className="flex flex-col justify-center items-center py-10 min-h-screen ">
             {hasActiveSubscription ? (
@@ -104,7 +79,7 @@ const BillingContent = async ({
                             </div>
                         </div>
                         <div className="mt-8 flex justify-center">
-                            <RemoveSubscription subscriptionId={subscriptionId || ""} />
+                            <RemoveSubscription subscriptionId={subscriptionId} />
                         </div>
                     </div>
                 </div>
@@ -113,9 +88,8 @@ const BillingContent = async ({
     )
 }
 
-const BillingPage = async ({ params, searchParams }: PageProps) => {
+const BillingPage = async ({ params, searchParams }: Props) => {
     const { agencyid } = await params
-    const { code } = await searchParams
     const user = await currentUser()
 
     if (!user) {
@@ -124,19 +98,19 @@ const BillingPage = async ({ params, searchParams }: PageProps) => {
 
     const agencyDetails = await db.agency.findUnique({
         where: {
-            id: agencyid
+            id: agencyid,
         },
         include: {
-            Subscription: true
-        }
+            Subscription: true,
+        },
     })
 
     if (!agencyDetails) {
-        return redirect("/agency/unauthorized")
+        return redirect("/")
     }
 
-    const hasActiveSubscription = agencyDetails.Subscription?.status === "ACTIVE"
-    const customerId = agencyDetails.customerId || ""
+    const customerId = agencyDetails.customerId
+    const hasActiveSubscription = agencyDetails.Subscription?.active
 
     return (
         <Suspense fallback={<LoadingPage />}>

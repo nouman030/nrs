@@ -73,21 +73,19 @@ const AgencyDetails = ({ data }: Props) => {
     if (data) {
       form.reset(data)
     }
-  }, [data, form])
 
-  useEffect(() => {
     // Suppress console errors and warnings
     if (typeof window !== "undefined") {
       console.error = () => {} // Suppress console errors
       console.warn = () => {} // Suppress console warnings
     }
-  }, [])
+  }, [data])
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-      let _custId
+      let custId
       if (!data?.id) {
-        const _bodyData = {
+        const bodyData = {
           email: values.companyEmail,
           name: values.name,
           shipping: {
@@ -108,9 +106,20 @@ const AgencyDetails = ({ data }: Props) => {
             state: values.state,
           },
         }
+
+        // Uncomment this section when ready to integrate with Stripe
+        // const customerResponse = await fetch('/api/stripe/create-customer', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify(bodyData),
+        // })
+        // const customerData: { customerId: string } = await customerResponse.json()
+        // custId = customerData.customerId
       }
 
-      const _newUserData = await initUser({ role: "AGENCY_OWNER" })
+      const newUserData = await initUser({ role: "AGENCY_OWNER" })
 
       const agencyData = {
         id: data?.id ? data.id : v4(),
@@ -131,7 +140,7 @@ const AgencyDetails = ({ data }: Props) => {
         goal: data?.goal || 5,
       }
 
-      await upsertAgency(agencyData)
+      const response = await upsertAgency(agencyData)
 
       toast({
         title: data?.id ? "Updated Agency" : "Created Agency",

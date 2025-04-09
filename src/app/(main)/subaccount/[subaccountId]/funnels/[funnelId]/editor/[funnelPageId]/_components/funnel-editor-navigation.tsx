@@ -122,7 +122,7 @@ const FunnelEditorNavigation = memo(({ funnelId, funnelPageDetails, subaccountId
         })
     }, [dispatch])
 
-    const DeviceButton = memo(({ value, icon: Icon }: { value: string, icon: React.ComponentType<{ className?: string }> }) => (
+    const DeviceButton = memo(({ value, icon: Icon }: { value: string, icon: any }) => (
         <Tooltip>
             <TooltipTrigger>
                 <TabsTrigger
@@ -137,8 +137,6 @@ const FunnelEditorNavigation = memo(({ funnelId, funnelPageDetails, subaccountId
             </TooltipContent>
         </Tooltip>
     ))
-
-    DeviceButton.displayName = 'DeviceButton'
 
     return (
         <TooltipProvider>

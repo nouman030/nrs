@@ -123,11 +123,11 @@ const PipelineTicket = ({
       {(provided, snapshot) => {
         if (snapshot.isDragging) {
           const offset = { x: 300, y: 20 }
-          //@ts-expect-error - Type mismatch in drag and drop
+          //@ts-ignore
           const x = provided.draggableProps.style?.left - offset.x
-          //@ts-expect-error - Type mismatch in drag and drop
+          //@ts-ignore
           const y = provided.draggableProps.style?.top - offset.y
-          //@ts-expect-error - Type mismatch in drag and drop
+          //@ts-ignore
           provided.draggableProps.style = {
             ...provided.draggableProps.style,
             top: y,

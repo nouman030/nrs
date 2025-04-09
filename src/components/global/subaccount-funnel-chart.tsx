@@ -2,30 +2,7 @@
 import { DonutChart } from '@tremor/react'
 import React from 'react'
 
-interface FunnelPage {
-  id: string
-  name: string
-  visits: number
-}
-
-interface ChartData {
-  name: string
-  totalFunnelVisits: number
-  FunnelPages?: FunnelPage[]
-}
-
-interface TooltipPayload {
-  name: string
-  value: number
-  color: string
-  payload: {
-    FunnelPages?: FunnelPage[]
-  }
-}
-
-type Props = { 
-  data: ChartData[] 
-}
+type Props = { data: any }
 
 const SubaccountFunnelChart = ({ data }: Props) => {
   return (
@@ -50,7 +27,7 @@ const customTooltip = ({
   payload,
   active,
 }: {
-  payload: TooltipPayload[] | undefined
+  payload: any
   active: boolean
 }) => {
   if (!active || !payload) return null
@@ -74,7 +51,7 @@ const customTooltip = ({
           </div>
         </div>
       </div>
-      {categoryPayload.payload.FunnelPages?.map((page) => (
+      {categoryPayload.payload.FunnelPages?.map((page: any) => (
         <div
           key={page.id}
           className="dark:text-white/70 text-black flex justify-between items-center"
