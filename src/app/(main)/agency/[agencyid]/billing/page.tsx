@@ -8,9 +8,9 @@ import { Suspense } from "react"
 import RemoveSubscription from "./_commponts/remove-subscription"
 
 type PageProps = {
-    params: {
+    params: Promise<{
         agencyid: string
-    }
+    }>
     searchParams?: {
         code?: string
     }
@@ -114,7 +114,7 @@ const BillingContent = async ({
 }
 
 const BillingPage = async ({ params, searchParams }: PageProps) => {
-    const { agencyid } = params
+    const { agencyid } = await params
     const user = await currentUser()
 
     if (!user) {
