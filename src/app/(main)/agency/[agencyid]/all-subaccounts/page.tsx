@@ -26,7 +26,7 @@ import { notFound } from 'next/navigation'
 import DeleteButton from './_components/delete-button'
 import CreateSubaccountButton from './_components/create-subaccount-btn'
 
-interface PageProps {
+interface Props {
   params: { agencyid: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
@@ -34,7 +34,7 @@ interface PageProps {
 export default async function AllSubaccountsPage({ 
   params,
   searchParams 
-}: PageProps) {
+}: Props) {
   try {
     const user = await getAuthUserDetails()
     
