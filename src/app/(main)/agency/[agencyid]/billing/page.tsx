@@ -7,12 +7,12 @@ import LoadingPage from "@/components/global/loading-page"
 import { Suspense } from "react"
 import RemoveSubscription from "./_commponts/remove-subscription"
 
-type Props = {
+interface PageProps {
     params: {
         agencyid: string
     }
     searchParams: {
-        code: string
+        code?: string
     }
 }
 
@@ -113,7 +113,7 @@ const BillingContent = async ({
     )
 }
 
-const BillingPage = async ({ params }: Props) => {
+const BillingPage = async ({ params }: PageProps) => {
     const { agencyid } = params
     const user = await currentUser()
 
