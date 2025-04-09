@@ -11,9 +11,9 @@ type PageProps = {
     params: Promise<{
         agencyid: string
     }>
-    searchParams?: {
+    searchParams: Promise<{
         code?: string
-    }
+    }>
 }
 
 type BillingContentProps = {
@@ -115,6 +115,7 @@ const BillingContent = async ({
 
 const BillingPage = async ({ params, searchParams }: PageProps) => {
     const { agencyid } = await params
+    const { code } = await searchParams
     const user = await currentUser()
 
     if (!user) {
