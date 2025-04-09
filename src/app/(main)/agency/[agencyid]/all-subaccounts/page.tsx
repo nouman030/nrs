@@ -35,13 +35,13 @@ type Props = {
 const AllSubaccountsPage = async ({ params }: Props) => {
   const user = await getAuthUserDetails()
   if (!user) return
-const pr = await params;
+  const agencyId = params.agencyid
   return (
     <AlertDialog>
       <div className="flex flex-col ">
         <CreateSubaccountButton
           user={user}
-          id={pr.agencyid}
+          id={agencyId}
           className="w-[200px] self-end m-6"
         />
         <Command className="rounded-lg bg-transparent">
