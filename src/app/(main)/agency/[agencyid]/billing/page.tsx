@@ -7,7 +7,7 @@ import LoadingPage from "@/components/global/loading-page"
 import { Suspense } from "react"
 import RemoveSubscription from "./_commponts/remove-subscription"
 
-interface PageProps {
+type PageProps = {
     params: {
         agencyid: string
     }
