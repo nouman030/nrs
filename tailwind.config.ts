@@ -1,5 +1,6 @@
 import { withUt } from 'uploadthing/tw'
 import colors from 'tailwindcss/colors'
+import animate from 'tailwindcss-animate'
 
 export default withUt({
   darkMode: ['class'],
@@ -186,5 +187,5 @@ export default withUt({
       },
     ],
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animate],
 })
