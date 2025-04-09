@@ -26,16 +26,19 @@ import React from 'react'
 import DeleteButton from './_components/delete-button'
 import CreateSubaccountButton from './_components/create-subaccount-btn'
 
+interface PageProps {
+  params: Promise<{ agencyid: string }>;
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
 export default async function AllSubaccountsPage({ 
   params,
   searchParams 
-}: {
-  params: { agencyid: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}: PageProps) {
+  const resolvedParams = await params;
   const user = await getAuthUserDetails()
   if (!user) return
-  const agencyId = params.agencyid
+  const agencyId = resolvedParams.agencyid
   return (
     <AlertDialog>
       <div className="flex flex-col ">
