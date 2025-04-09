@@ -18,17 +18,16 @@ const VideoComponent = (props: Props) => {
 
   // Initialize embedUrl when component mounts or src changes
   useEffect(() => {
-    const content = props.element.content
-    if (content && !Array.isArray(content) && 'src' in content && content.src) {
-      const embedUrl = getYouTubeEmbedUrl(content.src)
-      if (embedUrl !== content.embedUrl) {
+    if (props.element.content.embedUrl) {
+      const embedUrl = getYouTubeEmbedUrl(props.element.content.embedUrl)
+      if (embedUrl) {
         dispatch({
           type: 'UPDATE_ELEMENT',
           payload: {
             elementDetails: {
               ...props.element,
               content: {
-                ...content,
+                ...props.element.content,
                 embedUrl: embedUrl,
               },
             },
@@ -36,7 +35,7 @@ const VideoComponent = (props: Props) => {
         })
       }
     }
-  }, [props.element.content])
+  }, [props.element.content, dispatch, props.element])
 
   const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
     if (type === null) return

@@ -41,9 +41,9 @@ type Props = {}
 const SettingsTab = (props: Props) => {
   const { state, dispatch } = useEditor()
 
-  const handleOnChanges = (e: any) => {
+  const handleOnChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     const styleSettings = e.target.id
-    let value = e.target.value
+    const value = e.target.value
     const styleObject = {
       [styleSettings]: value,
     }
@@ -62,9 +62,9 @@ const SettingsTab = (props: Props) => {
     })
   }
 
-  const handleChangeCustomValues = (e: any) => {
+  const handleChangeCustomValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     const settingProperty = e.target.id
-    let value = e.target.value
+    const value = e.target.value
     const styleObject = {
       [settingProperty]: value,
     }
