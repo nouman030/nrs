@@ -22,30 +22,25 @@ import { getAuthUserDetails } from '@/lib/queries'
 import { SubAccount } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Metadata } from 'next'
 
 import React from 'react'
 import DeleteButton from './_components/delete-button'
 import CreateSubaccountButton from './_components/create-subaccount-btn'
 
-interface PageProps {
-  params: { agencyid: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+type Props = {
+  params: { agencyId: string }
 }
 
-export const metadata: Metadata = {
-  title: 'Subaccounts',
-}
-
-const AllSubaccountsPage = async ({ params }: PageProps) => {
+const AllSubaccountsPage = async ({ params }: Props) => {
   const user = await getAuthUserDetails()
   if (!user) return
-
+const pr = await params;
   return (
-    <div className="flex flex-col ">
+    <AlertDialog>
+      <div className="flex flex-col ">
         <CreateSubaccountButton
           user={user}
-          id={params.agencyid}
+          id={pr.agencyId}
           className="w-[200px] self-end m-6"
         />
         <Command className="rounded-lg bg-transparent">
@@ -57,7 +52,7 @@ const AllSubaccountsPage = async ({ params }: PageProps) => {
                 user.Agency.SubAccount.map((subaccount: SubAccount) => (
                   <CommandItem
                     key={subaccount.id}
-                    className="h-32 !bg-background my-2 text-primary/100 border-[1px] border-border p-4 rounded-lg hover:!bg-background cursor-pointer transition-all"
+                    className="h-32 !bg-background my-2 text-primary border-[1px] border-border p-4 rounded-lg hover:!bg-background cursor-pointer transition-all"
                   >
                     <Link
                       href={`/subaccount/${subaccount.id}`}
@@ -80,36 +75,34 @@ const AllSubaccountsPage = async ({ params }: PageProps) => {
                         </div>
                       </div>
                     </Link>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          size={'sm'}
-                          variant={'destructive'}
-                          className="w-20 hover:bg-red-600 hover:text-white !text-white"
-                        >
-                          Delete
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-left">
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDescription className="text-left">
-                            This action cannot be undone. This will delete the
-                            subaccount and all data related to the subaccount.
-                          </AlertDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="flex items-center">
-                          <AlertDialogCancel className="mb-2">
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction className="bg-destructive hover:bg-destructive">
-                            <DeleteButton subaccountId={subaccount.id} />
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        size={'sm'}
+                        variant={'destructive'}
+                        className="w-20 hover:bg-red-600 hover:text-white !text-white"
+                      >
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-left">
+                          Are your absolutely sure
+                        </AlertDialogTitle>
+                        <AlertDescription className="text-left">
+                          This action cannot be undon. This will delete the
+                          subaccount and all data related to the subaccount.
+                        </AlertDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex items-center">
+                        <AlertDialogCancel className="mb-2">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction className="bg-destructive hover:bg-destructive">
+                          <DeleteButton subaccountId={subaccount.id} />
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
                   </CommandItem>
                 ))
               ) : (
@@ -121,8 +114,8 @@ const AllSubaccountsPage = async ({ params }: PageProps) => {
           </CommandList>
         </Command>
       </div>
+    </AlertDialog>
   )
 }
 
 export default AllSubaccountsPage
-
