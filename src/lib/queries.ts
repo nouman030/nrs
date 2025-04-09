@@ -459,6 +459,20 @@ export const getUserPermissions = async (userId: string) => {
 
   return response
 }
+export const updateUser = async (user: Partial<User>) => {
+  const response = await db.user.update({
+    where: { email: user.email },
+    data: { ...user },
+  })
+  const clark = await clerkClient();
+  await clark.users.updateUserMetadata(response.id, {
+    privateMetadata: {
+      role: user.role || 'SUBACCOUNT_USER',
+    },
+  })
+
+  return response
+}
 
 export const changeUserPermissions = async (
   permissionId: string | undefined,
