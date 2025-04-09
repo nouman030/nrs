@@ -40,3 +40,14 @@ the preview:
 https://nrs-studio.vercel.app/
 
 
+here for the subscription:
+card number use :4718 6091 0820 4366
+or
+Test Card for Subscriptions
+Type	Card Network	Card Type	Card Number	CVV	Expiry Date
+Domestic	Visa	Credit Card	4718 6091 0820 4366	Random CVV	Any future date
+International	Mastercard	Credit Card	5104 0155 5555 5558	Random CVV	Any future date
+International	Mastercard	Debit Card	5104 0600 0000 0008	Random CVV	Any future 
+
+
+
