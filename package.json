@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"   
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.5",
@@ -83,6 +83,8 @@
     "@types/node": "22.10.5",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.4",
     "prisma": "^6.5.0",
