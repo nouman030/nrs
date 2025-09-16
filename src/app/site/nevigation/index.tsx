@@ -38,7 +38,7 @@ const Navigation = ({ user }: Props) => {
           Login
         </Link>
         <UserButton />
-        {/* <ModeToggle /> */}
+        <ModeToggle />
       </aside>
     </div>
   )

@@ -3,98 +3,91 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { pricingCards } from '@/lib/constants';
 import clsx from 'clsx';
-import { Check, ArrowRight, Zap, Building2, Users, BarChart, Layers, Code, Globe } from 'lucide-react';
+import { Check, ArrowRight, Zap, Building2, Users, BarChart, Code, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CountUp from '@/components/num';
-import { useTheme } from 'next-themes';
 
-
+// Note: No need to import useTheme as it wasn't being used to conditionally render styles.
+// The fix is to use theme-aware Tailwind classes instead.
 
 export default function Home() {
-  const { theme } = useTheme();
-  const { ref: heroRef, inView: heroInView } = useInView();
-  const { ref: featuresRef, inView: featuresInView } = useInView();
-  const { ref: aboutRef, inView: aboutInView } = useInView();
+  const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true, threshold: 0.4 });
+  const { ref: featuresRef, inView: featuresInView } = useInView({ triggerOnce: true, threshold: 0.4 });
+  const { ref: aboutRef, inView: aboutInView } = useInView({ triggerOnce: true, threshold: 0.4 });
+
+  // This check is good practice, but this variable is not used in the JSX below.
   const planId = process.env.RAZORPAY_PLAN_199 || 'plan_PwNt8gRjS5XuhW';
   if (!planId) {
     return <div>Plan ID is not defined.</div>;
   }
+
   const features = [
     {
       icon: Building2,
       title: 'Agency Management',
-      description: 'Manage multiple agencies and clients from a single dashboard'
+      description: 'Manage multiple agencies and clients from a single dashboard',
     },
     {
       icon: Users,
       title: 'Team Collaboration',
-      description: 'Seamless collaboration with role-based access control'
+      description: 'Seamless collaboration with role-based access control',
     },
     {
       icon: Globe,
       title: 'Website & Funnel Builder',
-      description: 'Create stunning websites and high-converting funnels with our drag-and-drop builder'
+      description: 'Create stunning websites and high-converting funnels with our drag-and-drop builder',
     },
     {
       icon: BarChart,
       title: 'Performance Metrics',
-      description: 'Track funnel performance and agency metrics with detailed graphs and charts'
-    }
+      description: 'Track funnel performance and agency metrics with detailed graphs and charts',
+    },
   ];
 
   const stats = [
     { number: 500, label: 'Agencies Powered' },
     { number: 50000, label: 'Websites Built' },
     { number: 99.9, label: 'Uptime' },
-    { number: 24 / 7, label: 'Support' }
+    { number: 247, label: 'Support', text: '24/7' }, // Fixed 24/7 display issue
   ];
-
-  // Add floating nav items
 
   return (
     <div className="relative">
-      {/* Floating Navigation */}
+      {/* Floating Navigation Commented Out */}
 
-
-      {/* Hero Section - Enhanced */}
-      <section className="min-h-screen w-full relative flex items-center justify-center flex-col bg-[#000308] overflow-hidden">
-        {/* Cyberpunk-style grid background */}
+      {/* Hero Section - Enhanced & Theme-Fixed */}
+      <section className="min-h-screen w-full relative flex items-center justify-center flex-col bg-background overflow-hidden">
+        {/* Cyberpunk-style grid background - Corrected for Light/Dark Mode */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:2rem_2rem] dark:bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)]" />
+          {/* Light mode grid with dark lines */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0000000a_1px,transparent_1px),linear-gradient(to_bottom,#0000000a_1px,transparent_1px)] bg-[size:2rem_2rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+          {/* Dark mode grid with lighter lines (overrides light mode) */}
+          <div className="absolute inset-0 dark:bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] dark:bg-[size:2rem_2rem] dark:[mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-transparent dark:from-primary/10 dark:via-transparent dark:to-secondary/10" />
           <div className="absolute inset-0 backdrop-blur-3xl opacity-10 dark:opacity-30" />
-          {/* Animated tech lines */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0.2, 0.5, 0.2] }}
+            animate={{ opacity: [0.1, 0.3, 0.1] }}
             transition={{ duration: 5, repeat: Infinity }}
-            className="absolute inset-0 bg-[url('/assets/circuit-pattern.svg')] bg-repeat opacity-20"
+            className="absolute inset-0 bg-[url('/assets/circuit-pattern.svg')] bg-repeat opacity-5"
           />
         </div>
 
-
         {/* Main content */}
         <div className="relative z-10 pt-[80px]">
-          {/* Glowing badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <span className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-xl shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] flex justify-center items-center mx-auto">
               Next Generation Website Builder
             </span>
           </motion.div>
 
-
-          {/* Enhanced NRS Logo */}
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", duration: 1 }}
+            transition={{ type: 'spring', duration: 1 }}
             className="relative mb-8"
           >
             <div className="bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
@@ -108,33 +101,23 @@ export default function Home() {
               animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 20 }}
               className="text-center space-y-8"
             >
-
-
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
                 className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
               >
-                Experience the next evolution in website creation. Our AI-powered platform
-                combines cutting-edge technology with intuitive design to help you build
-                extraordinary digital experiences.
+                Experience the next evolution in website creation. Our AI-powered platform combines cutting-edge technology with intuitive design to help you build extraordinary digital experiences.
               </motion.p>
 
               <motion.div className="flex items-center justify-center gap-4 pt-8">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
                     href="/agency"
-                    className="group relative inline-flex items-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-medium overflow-hidden"
+                    className="group relative inline-flex items-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-secondary text-primary-foreground font-medium overflow-hidden"
                   >
                     <span className="relative z-10">Start Building</span>
-                    <motion.div
-                      className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
-                      whileHover={{ scale: 1.5, rotate: 15 }}
-                    />
+                    
                     <ArrowRight className="ml-2 h-5 w-5 relative z-10" />
                   </Link>
                 </motion.div>
@@ -143,7 +126,7 @@ export default function Home() {
                   href="#features"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 rounded-xl text-white border border-primary/20 hover:bg-primary/5 transition-colors backdrop-blur-sm"
+                  className="px-8 py-4 rounded-xl text-foreground border border-border hover:bg-muted transition-colors backdrop-blur-sm"
                 >
                   Learn More
                 </motion.a>
@@ -154,30 +137,17 @@ export default function Home() {
 
         {/* Tech decoration elements */}
         <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/4 left-0 w-64 h-64 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-[100px]"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-1/4 left-0 w-64 h-64 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full blur-[100px]"
         />
         <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute bottom-1/4 right-0 w-96 h-96 bg-gradient-to-l from-primary/20 to-secondary/20 rounded-full blur-[120px]"
+          animate={{ scale: [1.2, 1, 1.2], rotate: [360, 180, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          className="absolute bottom-1/4 right-0 w-96 h-96 bg-gradient-to-l from-primary/10 to-secondary/10 rounded-full blur-[120px]"
         />
       </section>
+
       {/* Stats Section - Enhanced */}
       <section className="py-16 bg-gradient-to-b from-muted/50 to-background relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
@@ -192,7 +162,9 @@ export default function Home() {
                 className="relative group"
               >
                 <div className="text-center p-6 rounded-xl bg-card/50 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
-                  <CountUp from={0} to={stat.number} className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2" />
+                  <div className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+                    {stat.text ? stat.text : <CountUp from={0} to={stat.number} />}
+                  </div>
                   <p className="text-sm text-muted-foreground group-hover:text-primary transition-colors">{stat.label}</p>
                 </div>
               </motion.div>
@@ -211,7 +183,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold mb-4">Everything You Need</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">Everything You Need</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Powerful features to help you manage and grow your agency
             </p>
@@ -224,7 +196,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: featuresInView ? 1 : 0, y: featuresInView ? 0 : 20 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative p-6 rounded-xl bg-card hover:shadow-lg transition-shadow"
+                className="relative p-6 rounded-xl bg-card border hover:shadow-lg hover:shadow-primary/10 transition-shadow"
               >
                 <feature.icon className="h-10 w-10 text-primary mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
@@ -234,7 +206,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      
+     
       {/* About Section */}
       <section ref={aboutRef} className="py-24 bg-muted/50">
         <div className="container mx-auto px-4">
