@@ -6,17 +6,77 @@ import clsx from 'clsx';
 import { Check, ArrowRight, Zap, Building2, Users, BarChart, Code, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CountUp from '@/components/num';
+import React, { useEffect } from 'react';
 
 // Note: No need to import useTheme as it wasn't being used to conditionally render styles.
 // The fix is to use theme-aware Tailwind classes instead.
+function ScrambleText({ children }: { children: string }) {
+  const DURATION = 1.5; // Total duration of the scramble animation
+  const count = useMotionValue(0);
+  // useTransform maps the progress (0 to text length) to the duration
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const displayText = useTransform(rounded, (latest) => children.slice(0, latest));
+
+  useEffect(() => {
+    const controls = animate(count, children.length, {
+      type: 'tween',
+      duration: DURATION,
+      ease: 'easeInOut',
+    });
+    return controls.stop;
+  }, [children.length]);
+
+  const [text, setText] = React.useState('');
+
+  useEffect(() => {
+    const unsubscribe = displayText.on('change', (v) => setText(v));
+    return unsubscribe;
+  }, [displayText]);
+
+  return <span className="">{text}</span>;
+}
+
 
 export default function Home() {
-  const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true, threshold: 0.4 });
+  
   const { ref: featuresRef, inView: featuresInView } = useInView({ triggerOnce: true, threshold: 0.4 });
   const { ref: aboutRef, inView: aboutInView } = useInView({ triggerOnce: true, threshold: 0.4 });
+
+   const { ref: heroRef, inView: heroInView } = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  // Animation variants for the container to orchestrate the children's animations
+
+
+  // Animation variants for the text elements to slide up from a mask
+  const textVariants = {
+    hidden: { y: '110%', opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 15,
+        duration: 0.8,
+      },
+    },
+  };
+
+  // Animation variants for the buttons to fade in
+  const buttonVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    },
+  };
 
   // This check is good practice, but this variable is not used in the JSX below.
   const planId = process.env.RAZORPAY_PLAN_199 || 'plan_PwNt8gRjS5XuhW';
@@ -53,6 +113,15 @@ export default function Home() {
     { number: 99.9, label: 'Uptime' },
     { number: 247, label: 'Support', text: '24/7' }, // Fixed 24/7 display issue
   ];
+   const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 12 } },
+  };
+  // Animation variants for the main container to orchestrate the children
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.2 } },
+  };
 
   return (
     <div className="relative">
@@ -77,63 +146,75 @@ export default function Home() {
         </div>
 
         {/* Main content */}
-        <div className="relative z-10 pt-[80px]">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-            <span className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-xl shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] flex justify-center items-center mx-auto">
-              Next Generation Website Builder
-            </span>
-          </motion.div>
-
           <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', duration: 1 }}
-            className="relative mb-8"
-          >
-            <div className="bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
-              <h1 className="text-5xl font-bold text-center md:text-[150px]">NRS</h1>
-            </div>
-          </motion.div>
+      ref={heroRef}
+      variants={containerVariants}
+      initial="hidden"
+      animate={heroInView ? 'visible' : 'hidden'}
+      className="relative z-10 pt-[80px] flex flex-col items-center space-y-8"
+    >
+      {/* Item 1: The Badge */}
+      <motion.div variants={itemVariants}>
+        <span className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-xl shadow-[0_0_20px_hsl(var(--primary)/0.5)]">
+          Next Generation Website Builder
+        </span>
+      </motion.div>
 
-          <div ref={heroRef} className="max-w-4xl mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 20 }}
-              className="text-center space-y-8"
-            >
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
-              >
-                Experience the next evolution in website creation. Our AI-powered platform combines cutting-edge technology with intuitive design to help you build extraordinary digital experiences.
-              </motion.p>
+      {/* Item 2: The Interactive 3D Logo */}
+      <motion.div variants={itemVariants} className="relative">
+         <div className="bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
+           <h1 className="text-7xl md:text-[150px] font-bold text-center tracking-tighter">NRS</h1>
+         </div>
+      </motion.div>
+      
+      {/* Item 3: The Decoder Headline */}
+      <motion.h2
+        variants={itemVariants}
+        className="text-3xl md:text-5xl font-bold tracking-tighter text-center max-w-3xl"
+      >
+        <ScrambleText>Build Websites That Feel Alive.</ScrambleText>
+      </motion.h2>
 
-              <motion.div className="flex items-center justify-center gap-4 pt-8">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/agency"
-                    className="group relative inline-flex items-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-secondary text-primary-foreground font-medium overflow-hidden"
-                  >
-                    <span className="relative z-10">Start Building</span>
-                    
-                    <ArrowRight className="ml-2 h-5 w-5 relative z-10" />
-                  </Link>
-                </motion.div>
+      {/* Item 4: The Paragraph */}
+      <motion.p 
+        variants={itemVariants} 
+        className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-center"
+      >
+        Our AI-powered platform helps you build extraordinary, performant, and beautiful digital experiences with ease.
+      </motion.p>
+      
+      {/* Item 5: The Buttons */}
+      <motion.div
+        variants={itemVariants}
+        className="flex items-center justify-center flex-col sm:flex-row gap-6 pt-6"
+      >
+        {/* Futuristic Primary Button */}
+        <Link
+          href="/agency"
+          className="group relative inline-flex items-center justify-center px-6 py-3 rounded-full 
+                     font-semibold text-primary-foreground text-lg
+                     bg-primary shadow-lg shadow-primary/40
+                     transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        >
+          <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-20"></div>
+          Start Your Project
+        </Link>
+        
+        {/* Futuristic Secondary Button */}
+        <Link
+          href="#features"
+          className="group relative inline-flex items-center justify-center px-6 py-3 rounded-full 
+                     font-medium text-foreground"
+        >
+          <div className="absolute -inset-0.5 z-0 rounded-full bg-gradient-to-r from-primary to-secondary opacity-0 transition-opacity duration-300 group-hover:opacity-75 blur"></div>
+          <span className="relative z-10 flex items-center">
+            <span>Learn More</span>
+            <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </Link>
+      </motion.div>
+    </motion.div>
 
-                <motion.a
-                  href="#features"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 rounded-xl text-foreground border border-border hover:bg-muted transition-colors backdrop-blur-sm"
-                >
-                  Learn More
-                </motion.a>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
 
         {/* Tech decoration elements */}
         <motion.div
